@@ -86,4 +86,42 @@ class TardotgzTest < Minitest::Test
       read_from_archive(archive_path, /drunken\/noodle/)
     end
   end
+
+  def test_extract_from_archive_writes_archive_contents_for_string_pattern_to_disk
+    archive_path     = path_helper("test/fixtures/archive.tar.gz")
+    destination_path = path_helper(".tarball-extract-tmp")
+    pattern          = "testing1.md"
+
+    assert_equal destination_path, extract_from_archive(archive_path, destination_path, pattern)
+    assert File.exist?(destination_path.join("testing1.md"))
+
+    FileUtils.rm_rf(destination_path, :secure => true)
+  end
+
+  def test_extract_from_archive_writes_archive_contents_for_regexp_pattern_to_disk
+    archive_path     = path_helper("test/fixtures/archive.tar.gz")
+    destination_path = path_helper(".tarball-extract-tmp")
+    pattern          = /testing\d\.md/
+
+    assert_equal destination_path, extract_from_archive(archive_path, destination_path, pattern)
+    assert File.exist?(destination_path.join("testing1.md"))
+    assert File.exist?(destination_path.join("testing2.md"))
+
+    FileUtils.rm_rf(destination_path, :secure => true)
+  end
+
+  def test_extract_from_archive_accepts_a_block_and_cleans_up_after_yield
+    archive_path     = path_helper("test/fixtures/archive.tar.gz")
+    destination_path = path_helper(".tarball-extract-tmp")
+    pattern          = /testing\d\.md/
+
+    result = extract_from_archive(archive_path, destination_path, pattern) do
+      assert File.exist?(destination_path.join("testing1.md"))
+      assert File.exist?(destination_path.join("testing2.md"))
+    end
+
+    assert_nil result
+    refute File.exist?(destination_path)
+  end
+
 end
