@@ -47,4 +47,55 @@ module Tardotgz
 
     return archive_path
   end
+
+  # Public: Read and return file(s) contents from archive or yield block
+  # with each files contents as it is read.
+  #
+  # archive_path - Pathname or String path to archive.
+  # pattern      - String relative file path or Regexp pattern for selecting
+  #                multiple files.
+  #
+  # Returns a String (or NilClass if block given).
+  def read_from_archive(archive_path, pattern)
+    results = []
+
+    Zlib::GzipReader.open(archive_path) do |gz|
+      Gem::Package::TarReader.new(gz) do |tar|
+        case pattern
+        when String
+          tarfile = tar.detect do |tarfile|
+            tarfile.full_name == pattern
+          end
+
+          if tarfile
+            if block_given?
+              yield(tarfile)
+              return nil
+            else
+              results << tarfile.read
+            end
+          end
+        when Regexp
+          tar.each do |tarfile|
+            if tarfile.full_name =~ pattern
+              if block_given?
+                yield(tarfile)
+              else
+                results << tarfile.read
+              end
+            end
+          end
+
+          return nil if block_given?
+        end
+      end
+    end
+
+    if results.empty?
+      message = pattern.is_a?(Regexp) ? pattern.inspect : pattern
+      raise Errno::ENOENT.new(message)
+    end
+
+    results.join
+  end
 end
