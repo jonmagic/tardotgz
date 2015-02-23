@@ -2,7 +2,7 @@
 
 Tardotgz is an extraction of a few archive utility methods I wrote while working on a project at GitHub. These methods simplify the creation of gzipped tarball archives and the reading and extraction of files from those archives.
 
-One of the unique features of these utility methods is the ability to pass them a block to execute during archive creation or the reading of an archive (in fact `#extract_from_archive` just calls `#read_from_archive` and passes it a block).
+One of the unique features of the #read_from_archive and #extract_from_archive utility methods is the ability to pass them a block (in fact `#extract_from_archive` just calls `#read_from_archive` and passes it a block).
 
 And in case you were wondering, I've been pronouncing it "tar-dot-jeez" :grin:
 
