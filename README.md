@@ -6,11 +6,29 @@ One of the unique features of the #read_from_archive and #extract_from_archive u
 
 And in case you were wondering, I've been pronouncing it "tar-dot-jeez" :grin:
 
+## Installation
+
+You can install at the command line:
+
+```bash
+$ gem install tardotgz
+```
+
+Or add the gem to your Gemfile:
+
+```ruby
+source "https://rubygems.org"
+
+gem "tardotgz"
+```
+
 ## Usage
 
 Start by including the module into the class where you'll use it.
 
 ```ruby
+require "tardotgz"
+
 class FruitRollup
   include Tardotgz
 end
