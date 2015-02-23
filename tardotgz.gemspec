@@ -3,6 +3,7 @@
 Gem::Specification.new do |spec|
   spec.name          = "tardotgz"
   spec.version       = "1.0.0"
+  spec.platform      = Gem::Platform::RUBY
   spec.date          = "2015-02-22"
   spec.summary       = "Archive utility module"
   spec.description   = "Methods for creating, reading, and extracting gzipped tarballs."
@@ -12,9 +13,8 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/jonmagic/tardotgz"
   spec.license       = "MIT"
 
-  spec.files         = `git ls-files -z`.split("\x0")
-  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
-  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
+  spec.files         = `git ls-files`.split("\n")
+  spec.test_files    = `git ls-files -- {test}/*`.split("\n")
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler",  "~> 1.6"
